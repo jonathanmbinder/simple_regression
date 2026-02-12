@@ -11,23 +11,22 @@ str(df_possum) # check the structure of the data frame
 
 ## plot with base R -----------------------------
 
-plot(df_possum$total_length, df_possum$head_length,               # plot with base R
-  xlab="Total Length", 
-  ylab="Head Length",
-  main="Head Length vs Total Length")
+plot(df_possum$chest, df_possum$total_length,               # plot with base R
+  xlab="Chest girth", 
+  ylab="Total Length")
 
 # plot with ggplot2 ------------------------------
 
 library(ggplot2) 
 
-ggplot(df_possum, aes(x=total_length, y=head_length)) + 
+ggplot(df_possum, aes(x=chest, y=total_length)) + 
   geom_point() + 
-  labs(x="Total Length", y="Head Length", title="Head Length vs Total Length") 
+  labs(x="Chest girth", y="Total length") 
 
 # fit a linear model ----------------------------
 
-model_possum <- lm(head_length ~ total_length, data=df_possum) # fit a linear model with head length as the 
-                                                 # response variable and total length as the 
+model_possum <- lm(total_length ~ chest, data=df_possum) # fit a linear model with total length as the 
+                                                 # response variable and chest as the 
                                                  # predictor variable
 
 str(model_possum) # check the structure of the model object
@@ -42,8 +41,8 @@ model_possum$fitted.values # get the fitted values of the model
 summary(model_possum) # get a summary of the model
 
 # regression is a linear equation of the form y = mx + b, where m is the slope and b is the intercept. 
-# In this case, the slope (m) is 0.57 and the intercept (b) is 42.7. This means that 
-# for every unit increase in total length, head length increases by 0.57 units
+# In this case, the slope (m) is 1.22 and the intercept (b) is 54.21. This means that 
+# for every unit increase in chest, total length increases by 1.22 units
 
 # check the assumptions of the model ----------------------------
 
@@ -76,10 +75,10 @@ check_normality(model_possum)
 # you can plot the regression line on top of the scatter plot using ggplot2 by adding a geom_smooth() 
 # layer with method="lm".
 
-ggplot(df_possum, aes(x=total_length, y=head_length)) + 
+ggplot(df_possum, aes(x=chest, y=total_length)) + 
   geom_point(fill="white", shape=21) + 
   geom_smooth(method="lm", se=FALSE, color="black") + 
-  labs(x="Total Length (cm)", y="Head Length (cm)") +
+  labs(x="Chest girth (cm)", y="Total length (cm)") +
 theme_classic()
 
 # save regression plot with ggsave()
@@ -97,16 +96,16 @@ ggsave("figures/possum_regression_plot.pdf", width=6, height=4, dpi=600) # save 
 
 library(ggpubr) # load the ggpubr package to add regression equation and R-squared value to the plot 
 
-ggplot(df_possum, aes(x=total_length, y=head_length)) + 
+ggplot(df_possum, aes(x=chest, y=total_length)) + 
   geom_point(fill="white", shape=21) + 
   geom_smooth(method="lm", se=FALSE, color="black") + 
-  labs(x="Total Length (cm)", y="Head Length (cm)") + 
+  labs(x="Chest girth (cm)", y="Total Length (cm)") + 
   stat_regline_equation(
-   label.y=102
+   label.y=95
   ) + # add regression equation to the plot 
   stat_cor(
   aes(label = paste(..rr.label.., ..p.label.., sep = "~")), # add R-squared value to the plot 
-  label.y=101
+  label.y=94
   ) + 
   theme_classic()
 
@@ -114,7 +113,7 @@ ggplot(df_possum, aes(x=total_length, y=head_length)) +
 
 library(gtsummary) # load the gtsummary package to create a summary table of the regression model 
 
-tbl_regression(model_possum, label= list(total_length="total length (cm)")) # create a summary table of the regression model
+tbl_regression(model_possum, label= list(chest="Chest girth (cm)")) # create a summary table of the regression model
 
 tbl_regression(model_possum,
 label= list(total_length="total length (cm)"))  |> 
